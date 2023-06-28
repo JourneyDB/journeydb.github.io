@@ -44,7 +44,7 @@
       <a href="https://scholar.google.com/citations?user=cC8lXi8AAAAJ&hl=en" target="_blank">Aojun Zhou</a><sup>1</sup>,
       <a href="https://www.linkedin.cn/incareer/in/zipeng-bruce-qin-846a65119" target="_blank">Zipeng
         Qin</a><sup>1</sup>,
-      <a href="https://shepnerd.github.io" target="_blank">Yi Wang</a><sup>3</sup>,
+      <a href="https://shepnerd.github.io" target="_blank">Yi Wang</a><sup>4</sup>,
       <a href="https://jifengdai.org" target="_blank">Jifeng Dai</a><sup>3</sup>,
       <a href="http://mmlab.siat.ac.cn/yuqiao/" target="_blank">Yu Qiao</a><sup>4</sup>,
       <a href="https://www.ee.cuhk.edu.hk/~hsli/" target="_blank">Hongsheng Li</a><sup>1</sup>✉
@@ -97,7 +97,7 @@
 
     <br><br>
     <div class="section">
-      <s2> Statistics and Distribution</s2>
+      <s2> Dataset Details</s2>
       <!-- <h2 class="grey-heading_nerf">
                 <b>OmniObject3D Dataset</b>
             </h2> -->
@@ -107,6 +107,43 @@
                 OO3D is good
             </p> -->
 
+      <h2 class="grey-heading_nerf">
+        <b>Data Collection</b>
+      </h2>
+      <p class="paragraph-3 nerf_text">
+        As illustrated in Figure 1, for each image instance, we acquire the corresponding text prompts used to generate the images with Midjourney. Furhtermore, we employ the GPT3.5 to generate the caption and VAQ groundtruth.
+      </p>
+      <div class="columns-5 w-row">
+        <img src="assets/jdb_data_collection.jpg" style="width:95%; margin-right:0px; margin-top:10px;margin-bottom:0px;">
+      </div>
+      <br>
+      <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
+        Figure 1. Data Collection Procedure.
+      </p>
+
+
+      <h2 class="grey-heading_nerf">
+        <b>Data Instances</b>
+      </h2>
+      <p class="paragraph-3 nerf_text">
+        We provide several examples to show the contents of each instance of the dataset in Figure 2.
+      </p>
+      
+
+      <img src="assets/jdb_samples_small.jpeg" style="width:90%; margin-right:0px; margin-top:0px;">
+      <br>
+      <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
+        Figure 2. Samples of JourneyDB.
+      </p>
+
+
+
+      <h2 class="grey-heading_nerf">
+        <b>Data Splits</b>
+      </h2>
+      <p class="paragraph-3 nerf_text">
+        We provide detailed statistics for each split subset in the Table 1. We randomly split the whole dataset into roughly 20:1 to obtain the training and validation set. The training set contains 4,189,737 labeled images and 1,385,317 labeled prompts. The validation set contains 235,156 images and 82,093 prompts. And we additionally sample a testing set for manual filtering. The testing set contains 5,402 images and 5,171 prompts.
+      </p>
       <div class="columns-5 w-row">
         <style type="text/css">
           .tg {
@@ -260,30 +297,12 @@
           </tr>
         </table>
       </div>
-
       <br>
-
       <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
         Table 1. Data Split Statistics.
       </p>
 
       <br>
-
-      <div class="columns-5 w-row">
-        <img src="assets/jdb_data_collection.jpg" style="width:95%; margin-right:0px; margin-top:10px;margin-bottom:0px;">
-      </div>
-
-      <br>
-
-      <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
-        Figure 1. Data Collection Procedure.
-      </p>
-
-      <img src="assets/jdb_samples_small.jpeg" style="width:90%; margin-right:0px; margin-top:0px;">
-      <br>
-      <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
-        Figure 2. Samples of JourneyDB.
-      </p>
     </div>
 
     <div class="section">
@@ -293,10 +312,9 @@
         <b>Prompt Inversion</b>
       </h2>
       <p class="paragraph-3 nerf_text">
-        OmniObject3D boosts robustness analysis of point cloud
-        classification by disentangling the two critical out-of-distribution
-        (OOD) challenges introduced in the paper, i.e., OOD styles and OOD
-        corruptions.
+        With the proposed dataset, we set up the task: prompt inversion, which takes a single image and predicts the corresponding prompts.
+        we set up a benchmark for the zero-shot prompt inversion task, where we leverage state-of-the-art multi-modal models. We adjust different prompts for each model to help them perform their best in this novel task.
+        We evaluate these models on the test set of our model, and the results are presented in Table 2. In the experiment, we notice that the existing models find it hard to capture the details and the style-relevant information about the input image, and do not perform as well as in traditional datasets.
       </p>
 
       <style type="text/css">
@@ -420,18 +438,15 @@
 
         <br>
 
-        <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
-          Table 2. Prompt Inversion.
+        <p class="paragraph-3 nerf_text" ,="" style="text-align:left">
+          Table 2. Prompt Inversion. The existing models find it hard to capture the details and the style-relevant information about the input image, and do not perform as well as in traditional datasets.
         </p>
 
       <h2 class="grey-heading_nerf">
         <b>Style Retrieval</b>
       </h2>
       <p class="paragraph-3 nerf_text">
-        OmniObject3D boosts robustness analysis of point cloud
-        classification by disentangling the two critical out-of-distribution
-        (OOD) challenges introduced in the paper, i.e., OOD styles and OOD
-        corruptions.
+        Considering the huge style space, recognizing the style of a given image is super challenging, even for human beings. Therefore, style retrieval is desired to help people better understand the style of a given image. Retrieving a style prompt directly from a super large number of candidates is sophisticated and timeconsuming. Hence we cluster the style prompts into 344 categories, including, camera parameters, lighting, artist style, colour schemes, etc., as introduced in Section 3.2, and do the style prompt retrieval in each category, which significantly narrows the searching space. To set up the benchmark, we employ CLIP to perform a zero-shot style retrieval evaluation. The results are shown in Table 5. We notice the retrieval in the overall style prompts space results in super low recall. And the model performs much better when retrieving on the per-category sub-space.
       </p>
 
         
@@ -473,7 +488,7 @@
         <br>
 
         <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
-          Table 3. Style Retrieval.
+          Table 3. Style Retrieval. The model performs much better when retrieving on the per-category sub-space.
         </p>
         </div>
 
@@ -481,26 +496,22 @@
         <b>Image Caption</b>
       </h2>
       <p class="paragraph-3 nerf_text">
-        OmniObject3D boosts robustness analysis of point cloud
-        classification by disentangling the two critical out-of-distribution
-        (OOD) challenges introduced in the paper, i.e., OOD styles and OOD
-        corruptions.
+        Image captioning asks a multi-modal model to generate a text description for the visual content of an image. Compared to existing image captioning benchmarks (COCO Caption, etc.), JourneyDB includes both in-detail descriptions and high-level summarizations of images, assessing the model’s capability of finegrained recognition and holistic understanding.
+        We evaluate existing multi-modal models on the image captioning sub-task of JourneyDB. The results are demonstrated in Figure 3, indicating that providing good descriptions for AI-generated contents is challenging for multi-modal models trained on natural images.
       </p>
 
       <img src="assets/jdb_caption_small.jpg" style="width:90%; margin-right:0px; margin-top:0px;">
       <br>
       <p class="paragraph-3 nerf_text" ,="" style="text-align:center">
-        Figure 3. Image Caption.
+        Figure 3. Image Caption. The examples show that existing multi-modal models failed to recognize some key concepts from the AI-generated images.
       </p>
 
       <h2 class="grey-heading_nerf">
         <b>Visual Question Answering</b>
       </h2>
       <p class="paragraph-3 nerf_text">
-        OmniObject3D boosts robustness analysis of point cloud
-        classification by disentangling the two critical out-of-distribution
-        (OOD) challenges introduced in the paper, i.e., OOD styles and OOD
-        corruptions.
+        JourneyDB consists of images with abundant and diverse prompts, which describe not only the stylistic attributes but also the visual contents of the generated images. Given the prompts of the images, we construct two tasks of multiple-choice visual question answering (MC-VQA) to evaluate the model’s ability for comprehending the style and content of generative data respectively.
+        The evaluation results of the content-relevant and style-relevant zero-shot multiple-choice visual question answering are shown in Figure 4. We can observe that the performance of the existing multimodal models are far away from satisfactory on both the content-relevant and style-relevant MC-VQA.
       </p>
       
       <img src="assets/jdb_vqa_small.jpg" style="width:90%; margin-right:0px; margin-top:0px;">
